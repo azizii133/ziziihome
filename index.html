@@ -276,110 +276,105 @@
     <!-- JAVASCRIPT LOGIC & MODS DATA               -->
     <!-- ========================================== -->
     <script>
-        // Set Tahun Otomatis di Footer
+// Set Tahun Otomatis di Footer
+    if (document.getElementById('year')) {
         document.getElementById('year').textContent = new Date().getFullYear();
+    }
 
-        // ==========================================
-        // CONFIGURATION (UBAH PP & BACKGROUND DI SINI)
- const CONFIG = {
-        // Link foto profil kamu
+    // CONFIGURATION (FOTO PROFIL & BACKGROUND)
+    const CONFIG = {
+        // Link foto profil kamu:
         profilePicture: "https://i.pinimg.com/736x/3c/a5/d1/3ca5d183c9e3d5964b78ac725764420e.jpg",
-        
-        // Ubah link gambar background website
+        // Link gambar background website:
         backgroundImage: "https://www.upload.ee/image/19879348/sa-mp-007.png"
     };
 
     // Apply Configuration
-    document.getElementById('user-pp').src = CONFIG.profilePicture;
-    document.getElementById('dynamic-bg').style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
+    if (document.getElementById('user-pp')) {
+        document.getElementById('user-pp').src = CONFIG.profilePicture;
+    }
+    if (document.getElementById('dynamic-bg')) {
+        document.getElementById('dynamic-bg').style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
+    }
 
-    // --------------------------------------------------
-    // DAFTAR MODS DATA (UBAH / TAMBAH MOD DI SINI)
-    // --------------------------------------------------
+    // 1. DAFTAR MODS DATA
     const modsData = [
+        {
+            id: 1,
+            title: "Croshair ori enak buat tcw kata gw",
+            description: "Croshair ori buat yang pengen aja.",
+            category: "crosshair",
+            image: "https://www.upload.ee/image/19880136/sa-mp-008.png",
+            downloadUrl: "https://www.mediafire.com/file/54pwz2jies0hdg8/dsada.png/file"
+        }
     ];
 
-    // Label Kategori untuk Tampilan Kartu
+    // 2. LABEL KATEGORI (Graphics / ENB sudah dihapus)
     const categoryLabels = {
         'vehicles': 'Kendaraan',
         'skins': 'Skin / Karakter',
         'modpack': 'Modpack',
         'cleo': 'Cleo / Script',
-        'graphics': 'Graphic / ENB',
         'crosshair': 'Crosshair',
         'skybox': 'Skybox',
         'timecyc': 'Timecyc'
     };
-        // Render Mods to Grid
-        function renderMods(items) {
-            const grid = document.getElementById('mods-grid');
-            const emptyState = document.getElementById('empty-state');
-            document.getElementById('total-mods-count').textContent = items.length;
 
-            grid.innerHTML = '';
+    // 3. FUNGSI RENDER MODS KE GRID
+    function renderMods(items) {
+        const grid = document.getElementById('mods-grid');
+        const emptyState = document.getElementById('empty-state');
+        const totalCount = document.getElementById('total-mods-count');
+        
+        if (totalCount) totalCount.textContent = items.length;
+        if (!grid) return;
+        
+        grid.innerHTML = '';
 
-            if (items.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-
-            items.forEach(mod => {
-                const card = document.createElement('div');
-                card.className = "bg-brand-card border border-brand-border rounded-2xl overflow-hidden flex flex-col group hover:border-slate-500 silver-border-glow transition-all duration-300";
-                
-                card.innerHTML = `
-                    <!-- Thumbnail Image -->
-                    <div class="relative aspect-video overflow-hidden bg-slate-950 cursor-pointer" onclick="openPreviewModal(${mod.id})">
-                        <img src="${mod.image}" alt="${mod.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-slate-300 text-[10px] font-bold px-2.5 py-1 rounded-md border border-brand-border uppercase tracking-wider">
-                            ${categoryLabels[mod.category] || mod.category}
-                        </span>
-                    </div>
-
-                    <!-- Card Body -->
-                    <div class="p-5 flex flex-col flex-grow justify-between space-y-4">
-                        <div>
-                            <h3 class="text-base font-bold text-white group-hover:text-slate-200 transition-colors line-clamp-1">${mod.title}</h3>
-                            <p class="text-slate-400 text-xs mt-2 leading-relaxed line-clamp-2">${mod.description}</p>
-                        </div>
-
-                        <!-- Card Action Buttons -->
-                        <div class="pt-3 border-t border-brand-border/80 flex items-center gap-2">
-                            <button onclick="openPreviewModal(${mod.id})" class="w-1/2 py-2.5 rounded-xl bg-brand-surface border border-brand-border hover:bg-slate-800 text-slate-300 text-xs font-semibold transition-all flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-eye text-slate-400"></i> Preview
-                            </button>
-                            <a href="${mod.downloadUrl}" target="_blank" class="w-1/2 py-2.5 rounded-xl bg-slate-200 hover:bg-white text-slate-950 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 shadow-sm">
-                                <i class="fa-solid fa-download"></i> Download
-                            </a>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
+        if (items.length === 0) {
+            if (emptyState) emptyState.classList.remove('hidden');
+            return;
+        } else {
+            if (emptyState) emptyState.classList.add('hidden');
         }
 
-        // Filter Function
-        function filterCategory(category) {
-            // Update Active Filter Button UI
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                if (btn.dataset.category === category) {
-                    btn.className = "filter-btn active px-5 py-2.5 rounded-xl bg-slate-200 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-md hover:bg-white transition-all";
-                } else {
-                    btn.className = "filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all";
-                }
-            });
+        items.forEach(mod => {
+            const card = document.createElement('div');
+            card.className = "bg-brand-card rounded-2xl overflow-hidden border border-slate-800 shadow-lg";
 
-            // Filter Array Data
-            if (category === 'all') {
-                renderMods(modsData);
-            } else {
-                const filtered = modsData.filter(m => m.category === category);
-                renderMods(filtered);
-            }
+            card.innerHTML = `
+                <!-- Thumbnail Image -->
+                <div class="relative aspect-video">
+                    <img src="${mod.image}" alt="${mod.title}" class="w-full h-full object-cover">
+                    <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold bg-black/60 rounded text-slate-200">
+                        ${categoryLabels[mod.category] || mod.category}
+                    </span>
+                </div>
+                <!-- Konten & Tombol Download -->
+                <div class="p-4">
+                    <h3 class="font-bold text-slate-100">${mod.title}</h3>
+                    <p class="text-xs text-slate-400 my-2">${mod.description}</p>
+                    <a href="${mod.downloadUrl}" download target="_blank" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-all flex items-center gap-2 w-fit">
+                        <i class="fa-solid fa-download"></i> Download
+                    </a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // 4. FUNGSI FILTER KATEGORI
+    function filterCategory(category) {
+        if (category === 'all') {
+            renderMods(modsData);
+        } else {
+            const filtered = modsData.filter(mod => mod.category === category);
+            renderMods(filtered);
         }
+    }
+
+    // Panggil fungsi render pertama kali
+    renderMods(modsData);
 
         // Live Preview Modal Functions
         function openPreviewModal(id) {
