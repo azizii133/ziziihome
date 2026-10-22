@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zizii Home - SA-MP Modding Hub</title>
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Theme Configuration (Monochrome / Dark Silver Gaming Theme) -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#0a0d12',
+                            surface: '#121721',
+                            card: '#181f2c',
+                            cardHover: '#1f293a',
+                            border: '#2a3447',
+                            silver: '#94a3b8',
+                            silverLight: '#e2e8f0',
+                            accent: '#64748b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom Scrollbar Monokrom */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0d12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a3447;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        
+        /* Subtle Glow Effects */
+        .silver-glow {
+            box-shadow: 0 0 25px -5px rgba(226, 232, 240, 0.1);
+        }
+        .silver-border-glow:hover {
+            box-shadow: 0 0 15px 0px rgba(148, 163, 184, 0.25);
+        }
+        
+        /* Custom Background Overlay Gradient */
+        .hero-bg-overlay {
+            background: linear-gradient(180deg, rgba(10, 13, 18, 0.75) 0%, rgba(10, 13, 18, 0.95) 80%, #0a0d12 100%);
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-slate-200 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-slate-700 selection:text-white">
+    <!-- Background Rain Effect -->
+<canvas id="rainCanvas" class="fixed inset-0 pointer-events-none z-10 opacity-60"></canvas>
+    <!-- ========================================== -->
+    <!-- HEADER & NAVBAR                            -->
+    <!-- ========================================== -->
+    <header class="sticky top-0 z-40 bg-brand-bg/90 backdrop-blur-md border-b border-brand-border/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo Branding Zizii Home -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-slate-700 via-slate-500 to-slate-300 flex items-center justify-center text-slate-950 font-black text-xl shadow-md group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-folder-closed text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-slate-100 via-slate-300 to-slate-500 bg-clip-text text-transparent">
+                            ZIZII<span class="text-slate-400">HOME</span>
+                        </span>
+                        <span class="block text-[10px] tracking-widest uppercase font-semibold text-slate-500">GTA SA-MP Mod Vault</span>
+                    </div>
+                </a>
+
+                <!-- Status Badge Header -->
+                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-surface border border-brand-border text-xs font-semibold text-slate-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Ready for Customization</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- ========================================== -->
+        <!-- HERO SECTION WITH USER PP & BACKGROUND     -->
+        <!-- ========================================== -->
+        <section id="hero" class="relative py-16 lg:py-24 overflow-hidden border-b border-brand-border/80 bg-cover bg-center transition-all duration-500" id="hero-bg-container">
+            <!-- Background Image Container -->
+            <div id="dynamic-bg" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 scale-105" style="background-image: url('https://www.upload.ee/image/19879348/sa-mp-007.png');"></div>
+            
+            <!-- Monokrom Overlay -->
+            <div class="absolute inset-0 hero-bg-overlay backdrop-blur-[2px]"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                
+                <!-- Profil Picture Container -->
+                <div class="relative inline-block mb-6">
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-800 shadow-2xl mx-auto relative group">
+                        <img id="user-pp" src="https://www.upload.ee/image/19879348/sa-mp-007.png" alt="Zizii Profile" class="w-full h-full rounded-full object-cover border-2 border-brand-bg">
+                        <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs text-slate-200 font-semibold">
+                            Profile
+                        </div>
+                    </div>
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight max-w-3xl mx-auto">
+                    Koleksi & Repository Modding <br class="hidden sm:inline"/>
+                    <span class="bg-gradient-to-r from-slate-200 via-slate-400 to-slate-500 bg-clip-text text-transparent">
+                        GTA SA-MP Personal
+                    </span>
+                </h1>
+                
+                <p class="mt-4 text-slate-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                    Selamat datang di vault pribadi Zizii. Semua modifikasi kendaraan, skin, grafik, dan script SA-MP pilihan bisa kamu lihat dan unduh di bawah ini.
+                    <div class="mt-4 flex justify-center">
+    <a href="https://www.tiktok.com/@ziipelitz" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-sm font-medium transition-all hover:scale-105">
+        My TikTok
+        <!-- Background Music Auto Play -->
+<audio id="bgMusic" autoplay loop>
+    <source src="https://files.catbox.moe/ioljhx.mp3" type="audio/mpeg">
+</audio>
+    </a>
+</div>
+</div>
+                </p>
+
+                <!-- Quick Stats Badge -->
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-slate-400">
+                    <div class="px-4 py-2 rounded-xl bg-brand-surface/80 border border-brand-border backdrop-blur-md flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-slate-300"></i>
+                        <span>Total Mod: <strong id="total-mods-count" class="text-slate-100">0</strong></span>
+                    </div>
+                    <div class="px-4 py-2 rounded-xl bg-brand-surface/80 border border-brand-border backdrop-blur-md flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-slate-300"></i>
+                        <span>SA-MP Tested</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- MODS GALLERY SECTION                       -->
+        <!-- ========================================== -->
+        <section id="gallery" class="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Category Filter Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
+                <button onclick="filterCategory('all')" class="filter-btn active px-5 py-2.5 rounded-xl bg-slate-200 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-md hover:bg-white transition-all" data-category="all">
+                    <i class="fa-solid fa-border-all mr-1.5"></i> Semua Mod
+                </button>
+                <button onclick="filterCategory('vehicles')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="vehicles">
+                    <i class="fa-solid fa-car mr-1.5"></i> Kendaraan
+                </button>
+                <button onclick="filterCategory('skins')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="skins">
+                    <i class="fa-solid fa-user-ninja mr-1.5"></i> Skin / Karakter
+                </button>
+                <button onclick="filterCategory('graphics')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="graphics">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Modpack
+                </button>
+                <button onclick="filterCategory('cleo')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="cleo">
+                    <i class="fa-solid fa-code mr-1.5"></i> Cleo / Script
+                </button>
+                <button onclick="filterCategory('crosshair')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider shadow-sm transition-all">
+                    <i class="fa-solid fa-bullseye mr-1.5"></i> Crosshair
+                </button>
+                <button onclick="filterCategory('skybox')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider shadow-sm transition-all">
+    <i class="fa-solid fa-cloud mr-1.5"></i> Skybox
+                </button>
+                <button onclick="filterCategory('timecyc')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider shadow-sm transition-all">
+                    <i class="fa-solid fa-clock mr-1.5"></i> Timecyc
+
+                </button>
+            </div>
+
+            <!-- Mod Grid Container -->
+            <div id="mods-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Mod cards will be dynamically populated here via JavaScript -->
+            </div>
+
+            <!-- Empty State Message -->
+            <div id="empty-state" class="hidden py-16 text-center">
+                <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3 block"></i>
+                <h3 class="text-lg font-bold text-slate-300">Belum Ada Mod di Kategori Ini</h3>
+                <p class="text-slate-500 text-xs mt-1">Silakan pilih kategori lain atau tambahkan data mod di index.html.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- LIVE PREVIEW MODAL POP-UP                  -->
+    <!-- ========================================== -->
+    <div id="preview-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity duration-300">
+        <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl relative transform transition-all scale-95 opacity-0" id="modal-content">
+            
+            <!-- Close Button -->
+            <button onclick="closePreviewModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-900/80 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Content Grid -->
+            <div class="flex flex-col md:flex-row">
+                <!-- Large Image Preview -->
+                <div class="w-full md:w-1/2 aspect-video md:aspect-auto bg-slate-950 relative overflow-hidden flex items-center justify-center">
+                    <img id="modal-image" src="" alt="Mod Preview" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Mod Details -->
+                <div class="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span id="modal-category" class="px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                                Kategori
+                            </span>
+                            <span class="text-xs text-slate-500">SA-MP Verified</span>
+                        </div>
+                        <h3 id="modal-title" class="text-xl font-black text-white leading-snug">Judul Mod</h3>
+                        <p id="modal-description" class="text-slate-400 text-xs mt-3 leading-relaxed">
+                            Deskripsi lengkap mengenai mod ini akan ditampilkan di sini.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4 pt-4 border-t border-brand-border">
+                        <div class="flex items-center justify-between text-xs text-slate-400 font-mono">
+                            <span>Status: <strong class="text-emerald-400">Ready</strong></span>
+                            <span>Direct Download</span>
+                        </div>
+                        <a id="modal-download-btn" href="#" target="_blank" class="w-full py-3 rounded-xl bg-slate-200 hover:bg-white text-slate-950 font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-lg transition-all">
+                            <i class="fa-solid fa-download"></i> Download Mod Sekarang
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- FOOTER SECTION                             -->
+    <!-- ========================================== -->
+    <footer class="bg-brand-surface border-t border-brand-border py-8 text-slate-400 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-base font-black tracking-wider bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">ZIZII HOME</span>
+                <span class="text-slate-700">|</span>
+                <span class="text-slate-500">Personal SA-MP Mod Vault</span>
+            </div>
+            <div class="text-slate-500 text-center sm:text-right">
+                &copy; <span id="year"></span> Zizii Home. Grand Theft Auto & SA-MP are trademarks of Rockstar Games & SA-MP Team.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC & MODS DATA               -->
+    <!-- ========================================== -->
+    <script>
+        // Set Tahun Otomatis di Footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // ==========================================
+        // CONFIGURATION (UBAH PP & BACKGROUND DI SINI)
+ const CONFIG = {
+        // Link foto profil kamu
+        profilePicture: "https://i.pinimg.com/736x/3c/a5/d1/3ca5d183c9e3d5964b78ac725764420e.jpg",
+        
+        // Ubah link gambar background website
+        backgroundImage: "https://www.upload.ee/image/19879348/sa-mp-007.png"
+    };
+
+    // Apply Configuration
+    document.getElementById('user-pp').src = CONFIG.profilePicture;
+    document.getElementById('dynamic-bg').style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
+
+    // --------------------------------------------------
+    // DAFTAR MODS DATA (UBAH / TAMBAH MOD DI SINI)
+    // --------------------------------------------------
+    const modsData = [
+    ];
+
+    // Label Kategori untuk Tampilan Kartu
+    const categoryLabels = {
+        'vehicles': 'Kendaraan',
+        'skins': 'Skin / Karakter',
+        'modpack': 'Modpack',
+        'cleo': 'Cleo / Script',
+        'graphics': 'Graphic / ENB',
+        'crosshair': 'Crosshair',
+        'skybox': 'Skybox',
+        'timecyc': 'Timecyc'
+    };
+        // Render Mods to Grid
+        function renderMods(items) {
+            const grid = document.getElementById('mods-grid');
+            const emptyState = document.getElementById('empty-state');
+            document.getElementById('total-mods-count').textContent = items.length;
+
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            items.forEach(mod => {
+                const card = document.createElement('div');
+                card.className = "bg-brand-card border border-brand-border rounded-2xl overflow-hidden flex flex-col group hover:border-slate-500 silver-border-glow transition-all duration-300";
+                
+                card.innerHTML = `
+                    <!-- Thumbnail Image -->
+                    <div class="relative aspect-video overflow-hidden bg-slate-950 cursor-pointer" onclick="openPreviewModal(${mod.id})">
+                        <img src="${mod.image}" alt="${mod.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-slate-300 text-[10px] font-bold px-2.5 py-1 rounded-md border border-brand-border uppercase tracking-wider">
+                            ${categoryLabels[mod.category] || mod.category}
+                        </span>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-5 flex flex-col flex-grow justify-between space-y-4">
+                        <div>
+                            <h3 class="text-base font-bold text-white group-hover:text-slate-200 transition-colors line-clamp-1">${mod.title}</h3>
+                            <p class="text-slate-400 text-xs mt-2 leading-relaxed line-clamp-2">${mod.description}</p>
+                        </div>
+
+                        <!-- Card Action Buttons -->
+                        <div class="pt-3 border-t border-brand-border/80 flex items-center gap-2">
+                            <button onclick="openPreviewModal(${mod.id})" class="w-1/2 py-2.5 rounded-xl bg-brand-surface border border-brand-border hover:bg-slate-800 text-slate-300 text-xs font-semibold transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-eye text-slate-400"></i> Preview
+                            </button>
+                            <a href="${mod.downloadUrl}" target="_blank" class="w-1/2 py-2.5 rounded-xl bg-slate-200 hover:bg-white text-slate-950 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Function
+        function filterCategory(category) {
+            // Update Active Filter Button UI
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.className = "filter-btn active px-5 py-2.5 rounded-xl bg-slate-200 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-md hover:bg-white transition-all";
+                } else {
+                    btn.className = "filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all";
+                }
+            });
+
+            // Filter Array Data
+            if (category === 'all') {
+                renderMods(modsData);
+            } else {
+                const filtered = modsData.filter(m => m.category === category);
+                renderMods(filtered);
+            }
+        }
+
+        // Live Preview Modal Functions
+        function openPreviewModal(id) {
+            const mod = modsData.find(m => m.id === id);
+            if (!mod) return;
+
+            document.getElementById('modal-title').textContent = mod.title;
+            document.getElementById('modal-category').textContent = categoryLabels[mod.category] || mod.category;
+            document.getElementById('modal-description').textContent = mod.description;
+            document.getElementById('modal-image').src = mod.image;
+            document.getElementById('modal-download-btn').href = mod.downloadUrl;
+
+            const modal = document.getElementById('preview-modal');
+            const content = document.getElementById('modal-content');
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closePreviewModal() {
+            const modal = document.getElementById('preview-modal');
+            const content = document.getElementById('modal-content');
+
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Close modal when clicking outside content
+        document.getElementById('preview-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'preview-modal') {
+                closePreviewModal();
+            }
+        });
+          // Initial Render on Page Load
+    renderMods(modsData);
+
+// Initial Render on Page Load
+    renderMods(modsData);
+
+    // Fungsi Play / Pause Manual & Auto-start
+    function toggleMusic() {
+        const music = document.getElementById('bgMusic');
+        const btnText = document.getElementById('musicBtnText');
+        
+        if (music.paused) {
+            music.volume = 0.4;
+            music.play();
+            btnText.innerText = "Pause Music 🎵";
+        } else {
+            music.pause();
+            btnText.innerText = "Play Music 🎵";
+        }
+    }
+
+    // Muter otomatis saat pengguna klik di mana saja pertama kali
+    window.addEventListener('click', function autoPlayOnce() {
+        const music = document.getElementById('bgMusic');
+        if (music && music.paused) {
+            music.volume = 0.4;
+            music.play().then(() => {
+                document.getElementById('musicBtnText').innerText = "Pause Music 🎵";
+            }).catch(() => {});
+        }
+    }, { once: true });
+    // --- ANIMASI GERIMIS (RAIN EFFECT) ---
+const canvas = document.getElementById('rainCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Buat butiran air hujan
+const raindrops = Array.from({ length: 80 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    length: Math.random() * 15 + 10,
+    speed: Math.random() * 10 + 12,
+    opacity: Math.random() * 0.3 + 0.1
+}));
+
+function animateRain() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.strokeStyle = 'rgba(200, 225, 255, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.lineCap = 'round';
+
+    raindrops.forEach(drop => {
+        ctx.beginPath();
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(drop.x - 1, drop.y + drop.length); // Efek garis miring tipis
+        ctx.stroke();
+
+        drop.y += drop.speed;
+        drop.x -= 0.5; // Angin sepoi-sepoi ke kiri
+
+        // Reset saat jatuh ke bawah layar
+        if (drop.y > canvas.height) {
+            drop.y = -drop.length;
+            drop.x = Math.random() * canvas.width;
+        }
+    });
+
+    requestAnimationFrame(animateRain);
+}
+
+animateRain();
+</script>
+
+<!-- Tombol Floating Musik (Pojok Kanan Bawah) -->
+<button onclick="toggleMusic()" class="fixed bottom-5 right-5 z-50 bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-600 px-4 py-2 rounded-full text-xs font-semibold shadow-lg backdrop-blur-md transition-all flex items-center gap-2">
+    <span id="musicBtnText">Play Music 🎵</span>
+</button>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="https://files.catbox.moe/ioljhx.mp3" type="audio/mpeg">
+</audio>
+</body>
+</html>
