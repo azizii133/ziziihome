@@ -95,12 +95,14 @@
                 </a>
 
                 <!-- Status Badge Header -->
-                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-surface border border-brand-border text-xs font-semibold text-slate-300">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Ready for Customization</span>
-                </div>
-            </div>
-        </div>
+<a href="https://www.tiktok.com/@ziipelitz" target="_blank" class="flex items-center gap-2 bg-white text-gray-900 px-3 py-1.5 rounded-lg font-medium hover:bg-gray-100 transition text-xs">
+    <!-- Ikon SVG TikTok -->
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+    </svg>
+    TikTok Saya
+</a>
+</div>
     </header>
 
     <main class="flex-grow">
@@ -136,8 +138,7 @@
                 <p class="mt-4 text-slate-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
                     Selamat datang di vault pribadi Zizii. Semua modifikasi kendaraan, skin, grafik, dan script SA-MP pilihan bisa kamu lihat dan unduh di bawah ini.
                     <div class="mt-4 flex justify-center">
-    <a href="https://www.tiktok.com/@ziipelitz" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-sm font-medium transition-all hover:scale-105">
-        My TikTok
+                        
         <!-- Background Music Auto Play -->
 <audio id="bgMusic" autoplay loop>
     <source src="https://files.catbox.moe/ioljhx.mp3" type="audio/mpeg">
@@ -171,27 +172,27 @@
                 <button onclick="filterCategory('all')" class="filter-btn active px-5 py-2.5 rounded-xl bg-slate-200 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-md hover:bg-white transition-all" data-category="all">
                     <i class="fa-solid fa-border-all mr-1.5"></i> Semua Mod
                 </button>
-                <button onclick="filterCategory('vehicles')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="vehicles">
-                    <i class="fa-solid fa-car mr-1.5"></i> Kendaraan
-                </button>
-                <button onclick="filterCategory('skins')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="skins">
-                    <i class="fa-solid fa-user-ninja mr-1.5"></i> Skin / Karakter
-                </button>
-                <button onclick="filterCategory('graphics')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="graphics">
-                    <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Modpack
-                </button>
-                <button onclick="filterCategory('cleo')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all" data-category="cleo">
-                    <i class="fa-solid fa-code mr-1.5"></i> Cleo / Script
-                </button>
-                <button onclick="filterCategory('crosshair')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider shadow-sm transition-all">
-                    <i class="fa-solid fa-bullseye mr-1.5"></i> Crosshair
-                </button>
-                <button onclick="filterCategory('skybox')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider shadow-sm transition-all">
+ <button onclick="filterCategory('vehicles')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
+    <i class="fa-solid fa-car mr-1.5"></i> Kendaraan
+</button>
+<button onclick="filterCategory('skins')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
+    <i class="fa-solid fa-user-ninja mr-1.5"></i> Skin / Karakter
+</button>
+<button onclick="filterCategory('modpack')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
+    <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Modpack
+</button>
+<button onclick="filterCategory('cleo')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
+    <i class="fa-solid fa-code mr-1.5"></i> Cleo / Script
+</button>
+<button onclick="filterCategory('crosshair')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
+    <i class="fa-solid fa-bullseye mr-1.5"></i> Crosshair
+</button>
+<button onclick="filterCategory('skybox')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
     <i class="fa-solid fa-cloud mr-1.5"></i> Skybox
-                </button>
-                <button onclick="filterCategory('timecyc')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider shadow-sm transition-all">
-                    <i class="fa-solid fa-clock mr-1.5"></i> Timecyc
-
+</button>
+<button onclick="filterCategory('timecyc')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
+    <i class="fa-solid fa-clock mr-1.5"></i> Timecyc
+</button>
                 </button>
             </div>
 
@@ -243,12 +244,11 @@
                     </div>
 
                     <div class="space-y-4 pt-4 border-t border-brand-border">
-                        <div class="flex items-center justify-between text-xs text-slate-400 font-mono">
-                            <span>Status: <strong class="text-emerald-400">Ready</strong></span>
-                            <span>Direct Download</span>
-                        </div>
+                       <div class="flex items-center justify-end text-xs text-slate-400 font-mono">
+    <span>Direct Download</span>
+</div>
                         <a id="modal-download-btn" href="#" target="_blank" class="w-full py-3 rounded-xl bg-slate-200 hover:bg-white text-slate-950 font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-lg transition-all">
-                            <i class="fa-solid fa-download"></i> Download Mod Sekarang
+                            <i class="fa-solid fa-download"></i> Klik Untuk Download
                         </a>
                     </div>
                 </div>
@@ -272,10 +272,25 @@
         </div>
     </footer>
 
+    <!-- Modal Pratinjau Gambar (Lightbox) -->
+<div id="imageModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden" onclick="closeImageModal()">
+    <div class="relative max-w-4xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
+        <!-- Tombol Close (X) -->
+        <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-white text-3xl font-bold hover:text-sky-400 transition-colors">&times;</button>
+        
+        <!-- Gambar Besar -->
+        <img id="modalImage" src="" alt="Pratinjau Mod" class="max-w-full max-h-[80vh] rounded-xl border border-sky-400/50 shadow-[0_0_25px_rgba(56,189,248,0.5)] object-contain mx-auto">
+        
+        <!-- Keterangan Judul Mod -->
+        <p id="modalCaption" class="text-center text-slate-200 mt-3 font-medium text-sm tracking-wide"></p>
+    </div>
+  
+</div>
     <!-- ========================================== -->
     <!-- JAVASCRIPT LOGIC & MODS DATA               -->
     <!-- ========================================== -->
-    <script>
+
+<script>
 // Set Tahun Otomatis di Footer
     if (document.getElementById('year')) {
         document.getElementById('year').textContent = new Date().getFullYear();
@@ -298,7 +313,7 @@
     }
 
     // 1. DAFTAR MODS DATA
-    const modsData = [
+const modsData = [
         {
             id: 1,
             title: "Croshair ori enak buat tcw kata gw",
@@ -306,9 +321,17 @@
             category: "crosshair",
             image: "https://www.upload.ee/image/19880136/sa-mp-008.png",
             downloadUrl: "https://www.mediafire.com/file/54pwz2jies0hdg8/dsada.png/file"
-        }
+        },
+        {
+            id: 2,
+            title: "Nissan GTR",
+            description: "Bagus untuk anak anak jdm atau pembalap.",
+            category: "vehicles",
+            image: "https://www.upload.ee/image/19885628/IMG-20241124-WA0198.jpg",
+            downloadUrl: "https://www.mediafire.com/file/3kssvbpmb7y2n0z/Nissan_GTR_R33.zip/file"
+        },
     ];
-
+  
     // 2. LABEL KATEGORI (Graphics / ENB sudah dihapus)
     const categoryLabels = {
         'vehicles': 'Kendaraan',
@@ -345,7 +368,7 @@
             card.innerHTML = `
                 <!-- Thumbnail Image -->
                 <div class="relative aspect-video">
-                    <img src="${mod.image}" alt="${mod.title}" class="w-full h-full object-cover">
+                    <img src="${mod.image}" alt="${mod.title}" class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity" onclick="openPreviewModal(${mod.id})">
                     <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold bg-black/60 rounded text-slate-200">
                         ${categoryLabels[mod.category] || mod.category}
                     </span>
@@ -493,6 +516,30 @@ function animateRain() {
 }
 
 animateRain();
+
+// Fungsi untuk membuka modal gambar besar
+function openImageModal(imgSrc, title) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    
+    modalImg.src = imgSrc;
+    modalCaption.textContent = title;
+    modal.classList.remove('hidden');
+}
+
+// Fungsi untuk menutup modal gambar
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+}
+
+// Tutup modal pakai tombol ESC di keyboard
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeImageModal();
+    }
+});
 </script>
 
 <!-- Tombol Floating Musik (Pojok Kanan Bawah) -->
@@ -504,5 +551,6 @@ animateRain();
 <audio id="bgMusic" loop preload="auto">
     <source src="https://files.catbox.moe/ioljhx.mp3" type="audio/mpeg">
 </audio>
+</div>
 </body>
 </html>
