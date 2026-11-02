@@ -181,9 +181,6 @@
 <button onclick="filterCategory('modpack')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
     <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Modpack
 </button>
-<button onclick="filterCategory('cleo')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
-    <i class="fa-solid fa-code mr-1.5"></i> Cleo / Script
-</button>
 <button onclick="filterCategory('crosshair')" class="filter-btn px-5 py-2.5 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white font-medium text-xs uppercase tracking-wider hover:border-slate-500 transition-all">
     <i class="fa-solid fa-bullseye mr-1.5"></i> Crosshair
 </button>
@@ -284,7 +281,8 @@
         <!-- Keterangan Judul Mod -->
         <p id="modalCaption" class="text-center text-slate-200 mt-3 font-medium text-sm tracking-wide"></p>
     </div>
-  
+
+</div>`
 </div>
     <!-- ========================================== -->
     <!-- JAVASCRIPT LOGIC & MODS DATA               -->
@@ -314,77 +312,125 @@
 
     // 1. DAFTAR MODS DATA
 const modsData = [
-        {
-            id: 1,
-            title: "Croshair ori enak buat tcw kata gw",
-            description: "Croshair ori buat yang pengen aja.",
-            category: "crosshair",
-            image: "https://www.upload.ee/image/19880136/sa-mp-008.png",
-            downloadUrl: "https://www.mediafire.com/file/54pwz2jies0hdg8/dsada.png/file"
-        },
-        {
-            id: 2,
-            title: "Nissan GTR",
-            description: "Bagus untuk anak anak jdm atau pembalap.",
-            category: "vehicles",
-            image: "https://www.upload.ee/image/19885628/IMG-20241124-WA0198.jpg",
-            downloadUrl: "https://www.mediafire.com/file/3kssvbpmb7y2n0z/Nissan_GTR_R33.zip/file"
-        },
-    ];
+    {
+        id: 1,
+        title: "Croshair ori enak buat tcw kata gw",
+        description: "Croshair ori buat yang pengen aja.",
+        category: "crosshair",
+        image: "https://www.upload.ee/image/19880136/sa-mp-008.png",
+        downloadUrl: "https://www.mediafire.com/file/54pwz2jles8hdp8/dsada.png/file",
+        previewUrl: "https://www.upload.ee/image/19880136/sa-mp-008.png" // <--- Perhatikan tanda koma di akhir baris downloadUrl di atasnya!
+    },
+    {
+        id: 2,
+        title: "Nissan GTR",
+        description: "Bagus untuk anak anak jdm atau pembalap.",
+        category: "vehicles",
+        image: "https://www.upload.ee/image/19885628/IMG-20241124-WA0198.jpg",
+        downloadUrl: "https://www.mediafire.com/file/1kssvbpnh2y2n0z/Nissan_GTR_R33.zip/file",
+        previewUrl: "https://www.upload.ee/image/19885628/IMG-20241124-WA0198.jpg"
+    },
+    {
+        id: 3,
+        title: "Skybox.",
+        description: "Dapat Dari Discord Orang.",
+        category: "skybox",
+        image: "https://www.upload.ee/image/19925623/sa-mp-003.png",
+        downloadUrl: "https://www.mediafire.com/file/rktqdvzlxo2yzf0/Skybox_1.rar/file",
+        previewUrl: "https://www.upload.ee/image/19925623/sa-mp-003.png"
+    },
+    {
+        id: 4,
+        title: "Skin Epep.",
+        description: "Skin epep nih dapat dari discord orang.",
+        category: "skins",
+        image: "https://www.upload.ee/image/19925639/skin_aleatorio_free_fire_1.jpg",
+        downloadUrl: "https://www.mediafire.com/file/akhv9ldjgkjhdj7/skin+aleatorio+free+fire+1.rar/file",
+        previewUrl: "https://www.upload.ee/image/19925639/skin_aleatorio_free_fire_1.jpg"
+    },
+    {
+        id: 5,
+        title: "Timecyc.",
+        description: "Timecyc ini dapat dari discord orang.",
+        category: "timecyc",
+        image: "https://www.upload.ee/image/19925664/Grand_Theft_Auto__San_Andreas_Screenshot_2022.png",
+        downloadUrl: "https://www.mediafire.com/file/f1bpnewnvniacyu/extGen_TimeCycle.rar/file",
+        previewUrl: "https://www.upload.ee/image/19925664/Grand_Theft_Auto__San_Andreas_Screenshot_2022.png"
+    },
+    {
+        id: 6,
+        title: "modpack compe zizi.",
+        description: "make ni gta auto gacor.",
+        category: "modpack",
+        image: "https://www.upload.ee/image/19926656/sa-mp-013.png",
+        downloadUrl: "https://www.mediafire.com/file/w2iuli1o7dl4sog/gta+compe+zizii+auto+gacor.rar/file",
+        previewUrl: "https://www.upload.ee/image/19926656/sa-mp-013.png"
+    }
+];
   
-    // 2. LABEL KATEGORI (Graphics / ENB sudah dihapus)
+    // 2. LABEL KATEGORI
     const categoryLabels = {
         'vehicles': 'Kendaraan',
         'skins': 'Skin / Karakter',
         'modpack': 'Modpack',
-        'cleo': 'Cleo / Script',
         'crosshair': 'Crosshair',
         'skybox': 'Skybox',
         'timecyc': 'Timecyc'
     };
 
     // 3. FUNGSI RENDER MODS KE GRID
-    function renderMods(items) {
-        const grid = document.getElementById('mods-grid');
-        const emptyState = document.getElementById('empty-state');
-        const totalCount = document.getElementById('total-mods-count');
-        
-        if (totalCount) totalCount.textContent = items.length;
-        if (!grid) return;
-        
-        grid.innerHTML = '';
+ function renderMods(items) {
+    const grid = document.getElementById('mods-grid');
+    const emptyState = document.getElementById('empty-state');
+    const totalCount = document.getElementById('total-mods-count');
 
-        if (items.length === 0) {
-            if (emptyState) emptyState.classList.remove('hidden');
-            return;
-        } else {
-            if (emptyState) emptyState.classList.add('hidden');
-        }
+    if (totalCount) totalCount.textContent = items.length;
 
-        items.forEach(mod => {
-            const card = document.createElement('div');
-            card.className = "bg-brand-card rounded-2xl overflow-hidden border border-slate-800 shadow-lg";
+    if (items.length === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+    } else {
+        if (emptyState) emptyState.classList.add('hidden');
+    }
 
-            card.innerHTML = `
-                <!-- Thumbnail Image -->
-                <div class="relative aspect-video">
-                    <img src="${mod.image}" alt="${mod.title}" class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity" onclick="openPreviewModal(${mod.id})">
-                    <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold bg-black/60 rounded text-slate-200">
-                        ${categoryLabels[mod.category] || mod.category}
-                    </span>
-                </div>
-                <!-- Konten & Tombol Download -->
-                <div class="p-4">
-                    <h3 class="font-bold text-slate-100">${mod.title}</h3>
-                    <p class="text-xs text-slate-400 my-2">${mod.description}</p>
-                    <a href="${mod.downloadUrl}" download target="_blank" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-all flex items-center gap-2 w-fit">
+    grid.innerHTML = ''; // Mengosongkan grid sebelum di-render ulang
+
+    items.forEach(mod => {
+        const card = document.createElement('div');
+        card.className = "bg-brand-card rounded-2xl overflow-hidden border border-slate-800 shadow-lg";
+
+        card.innerHTML = `
+            <!-- Thumbnail Image -->
+            <div class="relative aspect-video">
+                <img src="${mod.image}" alt="${mod.title}" class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity" onclick="openPreviewModal('${mod.id}')">
+                <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold bg-black/60 rounded text-slate-200">
+                    ${categoryLabels[mod.category] || mod.category}
+                </span>
+            </div>
+
+            <!-- Konten & Tombol -->
+            <div class="p-4">
+                <h3 class="font-bold text-slate-100">${mod.title}</h3>
+                <p class="text-xs text-slate-400 my-2">${mod.description}</p>
+                
+                <!-- Kontainer Tombol Jejer ke Samping -->
+                <div class="flex items-center gap-2 mt-3">
+                    <!-- Tombol Download -->
+                    <a href="${mod.downloadUrl}" target="_blank" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-all flex items-center gap-2">
                         <i class="fa-solid fa-download"></i> Download
                     </a>
+                    
+                    <!-- Tombol Preview Baru -->
+                    <a href="${mod.previewUrl}" target="_blank" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Preview
+                    </a>
                 </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
 
     // 4. FUNGSI FILTER KATEGORI
     function filterCategory(category) {
