@@ -44,6 +44,168 @@
 
 </head>
 <body class="bg-brand-bg text-slate-200 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-slate-700 selection:text-white">
+
+</div>   
+<!-- Bagian Profil & Tombol Logout (Awalnya tersembunyi dengan kelas 'hidden') -->
+<div id="userProfileSection" class="hidden flex items-center gap-3 backdrop-blur-md bg-white/10 px-4 py-2 rounded-full border border-white/20">
+    <span id="userEmailDisplay" class="text-white text-sm font-medium"></span>
+    <button onclick="handleLogout()" class="bg-red-500/80 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-full transition">
+        Logout
+    </button>
+</div>
+
+<!-- Panel Khusus Admin (Hanya terlihat oleh Admin) -->
+<div id="adminPanel" class="hidden max-w-md mx-auto mt-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-center">
+    <p class="text-amber-300 text-sm font-semibold mb-2">Panel Kontrol Admin Zizii Home</p>
+    <p class="text-slate-300 text-xs">Selamat datang kembali, Admin! Area ini tersembunyi dari pengunjung biasa.</p>
+</div>
+
+<!-- Bagian Profil & Tombol Logout -->
+<div id="userProfileSection" class="hidden fixed top-4 right-4 z-40 flex items-center gap-3 backdrop-blur-md bg-white/10 px-4 py-2 rounded-full border border-white/20">
+    <!-- Badge Admin (Otomatis muncul kalau email admin yang login) -->
+    <span id="adminBadge" class="hidden bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold px-2.5 py-0.5 rounded-full">
+        ADMIN
+    </span>
+    
+    <span id="userEmailDisplay" class="text-white text-sm font-medium"></span>
+    
+    <button onclick="handleLogout()" class="bg-red-500/80 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-full transition">
+        Logout
+    </button>
+</div>
+
+<!-- MODAL LOGIN / REGISTER GLASSMORPHISM FIREBASE -->
+<div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md px-4">
+    <div class="w-full max-w-md p-8 rounded-3xl bg-slate-900/40 border border-white/10 shadow-2xl backdrop-blur-xl text-white">
+        
+        <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
+        <!-- Form Login Utama -->
+        <div id="loginFormContainer">
+            <div class="mb-4">
+                <label class="block text-xs text-slate-300 mb-1">Email</label>
+                <input type="email" id="loginEmail" placeholder="nama@email.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-xs text-slate-300 mb-1">Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+            </div>
+
+            <button onclick="handleLogin()" class="w-full bg-white hover:bg-slate-200 text-slate-900 font-semibold text-sm py-2.5 rounded-xl transition mb-4">
+                Login
+            </button>
+
+            <!-- Tautan Forgot Password & Register -->
+            <div class="flex justify-between items-center text-xs px-1">
+                <a href="#" onclick="showForgotPassword()" class="text-slate-400 hover:text-white transition">Forgot Password?</a>
+                <p class="text-slate-400">Don't have an account? <span onclick="showRegister()" class="text-blue-400 cursor-pointer hover:underline">Register</span></p>
+            </div>
+        </div>
+
+        <!-- Form Khusus Lupa Password (Awalnya Tersembunyi) -->
+        <div id="forgotPasswordContainer" class="hidden">
+            <h3 class="text-lg font-semibold mb-2">Reset Password</h3>
+            <p class="text-slate-300 text-xs mb-4">Masukkan email kamu di bawah ini. Kami akan mengirimkan link untuk mereset password ke Gmail kamu.</p>
+            
+            <div class="mb-4">
+                <input type="email" id="resetEmail" placeholder="Masukkan email kamu..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+            </div>
+
+            <button onclick="handleResetPassword()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2.5 rounded-xl transition mb-3">
+                Kirim Link Reset
+            </button>
+            <button onclick="backToLogin()" class="w-full bg-transparent hover:bg-white/5 text-slate-300 text-xs py-2 rounded-xl transition">
+                Kembali ke Login
+            </button>
+        </div>
+ 
+        <!-- Custom Popup Modal Error -->
+<div id="errorModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden">
+    <div class="bg-zinc-900 border border-zinc-700 text-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center relative">
+        <div class="text-4xl mb-3">😊</div>
+        <h3 class="text-lg font-bold mb-2">Ups, Password Salah!</h3>
+        <p id="errorMessage" class="text-sm text-zinc-400 mb-5">Email atau password yang kamu masukkan salah.</p>
+        <button onclick="closeErrorModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-xl transition">
+            Tutup
+        </button>
+    </div>
+</div>
+</div>
+    </div>
+</div>
+<!-- Firebase SDK & Setup -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyDFHBQfNCeJnUamZ8s6spwsTO963APPWHA",
+  authDomain: "zizii-home.firebaseapp.com",
+  projectId: "zizii-home",
+  storageBucket: "zizii-home.firebasestorage.app",
+  messagingSenderId: "963036128290",
+  appId: "1:963036128290:web:10f28b175d3496bdf0567b",
+  measurementId: "G-QW709276N6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Daftarkan ke window agar bisa dipanggil oleh script.js
+  window.auth = auth;
+  window.createUserWithEmailAndPassword = (authObj, email, pass) => createUserWithEmailAndPassword(authObj, email, pass);
+  window.signInWithEmailAndPassword = (authObj, email, pass) => signInWithEmailAndPassword(authObj, email, pass);
+  window.onAuthStateChanged = (authObj, callback) => onAuthStateChanged(authObj, callback);
+  window.signOut = (authObj) => signOut(authObj);
+</script>
+
+        <!-- Judul Form (Berubah otomatis: Login / Register) -->
+        <h2 id="modalTitle" class="text-3xl font-bold text-center mb-6 tracking-wide">Login</h2>
+
+        <form onsubmit="handleAuthSubmit(event)" class="space-y-5">
+            
+            <!-- Input Email -->
+            <div class="space-y-1">
+                <label class="text-xs font-medium text-slate-300 ml-1">Email</label>
+                <div class="relative flex items-center">
+                    <span class="absolute left-4 text-slate-400"><i class="fa-solid fa-envelope"></i></span>
+                    <input type="email" id="userEmail" required placeholder="nama@gmail.com" 
+                        class="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-sky-400 focus:bg-white/10 text-sm transition-all placeholder:text-slate-500">
+                </div>
+            </div>
+
+            <!-- Input Password -->
+            <div class="space-y-1">
+                <label class="text-xs font-medium text-slate-300 ml-1">Password</label>
+                <div class="relative flex items-center">
+                    <span class="absolute left-4 text-slate-400"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" id="userPassword" required placeholder="••••••••" 
+                        class="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-sky-400 focus:bg-white/10 text-sm transition-all placeholder:text-slate-500">
+                </div>
+            </div>
+
+            <!-- Tombol Utama (Login / Register) -->
+            <button type="submit" id="submitBtn" class="w-full py-3.5 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-200 transition-all shadow-lg shadow-white/10 text-sm mt-2">
+                Login
+            </button>
+
+            <!-- Tombol Pindah Mode (Login <-> Register) -->
+            <p class="text-center text-xs text-slate-400 mt-4">
+                <span id="toggleText">Don't have an account?</span> 
+                <button type="button" onclick="toggleMode()" class="text-sky-400 font-medium hover:underline ml-1 focus:outline-none">
+                    <span id="toggleBtnText">Register</span>
+                </button>
+            </p>
+        </form>
+    </div>
+</div>
     <!-- Background Rain Effect -->
 <canvas id="rainCanvas" class="fixed inset-0 pointer-events-none z-10 opacity-60"></canvas>
     <!-- ========================================== -->
@@ -267,6 +429,6 @@
     <source src="https://files.catbox.moe/nldyrv.mp3" type="audio/mpeg">
 </audio>
 </div>
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>

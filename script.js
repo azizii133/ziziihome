@@ -1,4 +1,9 @@
-
+import { 
+    signInWithEmailAndPassword, 
+    signOut, 
+    onAuthStateChanged, 
+    sendPasswordResetEmail 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 // Set Tahun Otomatis di Footer
     if (document.getElementById('year')) {
         document.getElementById('year').textContent = new Date().getFullYear();
@@ -290,9 +295,229 @@ function closeImageModal() {
     modal.classList.add('hidden');
 }
 
-// Tutup modal pakai tombol ESC di keyboard
+// Tutup modal pakai tombol ESC di keyboardssssss
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeImageModal();
     }
 });
+let isRegisterMode = false; // Status awal: Mode Login
+
+// Fungsi untuk tukar tampilan form (Login <-> Register)
+function toggleMode() {
+    isRegisterMode = !isRegisterMode;
+
+    const modalTitle = document.getElementById('modalTitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleText = document.getElementById('toggleText');
+    const toggleBtnText = document.getElementById('toggleBtnText');
+
+    if (isRegisterMode) {
+        modalTitle.innerText = "Register";
+        submitBtn.innerText = "Register Now";
+        toggleText.innerText = "Already have an account?";
+        toggleBtnText.innerText = "Login";
+    } else {
+        modalTitle.innerText = "Login";
+        submitBtn.innerText = "Login";
+        toggleText.innerText = "Don't have an account?";
+        toggleBtnText.innerText = "Register";
+    }
+}
+
+// Fungsi Utama: Eksekusi Login / Register via Firebase
+async function handleAuthSubmit(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('userEmail').value.trim();
+    const password = document.getElementById('userPassword').value.trim();
+
+    try {
+        if (isRegisterMode) {
+            // PROSES BUAT AKUN BARU
+            await window.createUserWithEmailAndPassword(window.auth, email, password);
+            alert("Registrasi Berhasil! Silakan login menggunakan akun baru kamu.");
+            toggleMode(); // Kembalikan ke tampilan login
+        } else {
+            // PROSES MASUK / LOGIN
+            await window.signInWithEmailAndPassword(window.auth, email, password);
+            
+            // Sembunyikan modal login agar website utama terbuka
+            document.getElementById('loginModal').classList.add('hidden');
+
+            // Putar musik otomatis setelah sukses masuk
+            const music = document.getElementById('bgMusic');
+            if (music) {
+                music.volume = 0.4;
+                music.play().catch(() => {});
+            }
+        }
+    } catch (error) {
+        alert("Gagal: " + error.message);
+    }
+}
+// 1. Pantau Status Login User secara Real-time
+// Fungsi ini otomatis mengecek apakah ada user yang sedang aktif login
+document.addEventListener("DOMContentLoaded", () => {
+    // Pastikan Firebase Auth sudah siap, lalu pantau statusnya
+    if (window.auth) {
+        window.auth.onAuthStateChanged((user) => {
+            const profileSection = document.getElementById('userProfileSection');
+            const emailDisplay = document.getElementById('userEmailDisplay');
+            const loginModal = document.getElementById('loginModal');
+
+            if (user) {
+                // USER SEDANG LOGIN:
+                // Sembunyikan modal login
+                if (loginModal) loginModal.classList.add('hidden');
+                
+                // Tampilkan info profil & email user di navbar
+                if (profileSection) profileSection.classList.remove('hidden');
+                if (emailDisplay) emailDisplay.innerText = user.email;
+            } else {
+                // USER BELUM LOGIN / KELUAR:
+                // Tampilkan kembali modal login
+                if (loginModal) loginModal.classList.remove('hidden');
+                
+                // Sembunyikan info profil
+                if (profileSection) profileSection.classList.add('hidden');
+            }
+        });
+    }
+});
+
+// 2. Fungsi untuk Proses Logout
+async function handleLogout() {
+    try {
+        await window.auth.signOut();
+        alert("Berhasil keluar akun!");
+    } catch (error) {
+        alert("Gagal logout: " + error.message);
+    }
+}
+const ADMIN_EMAIL = "habibazizi725@gmail.com";
+
+onAuthStateChanged(window.auth, (user) => {
+    const loginModal = document.getElementById("loginModal");
+    const userProfileSection = document.getElementById("userProfileSection");
+    const userEmailDisplay = document.getElementById("userEmailDisplay");
+
+    // Ambil elemen khusus Admin
+    const adminBadge = document.getElementById("adminBadge");
+    const adminPanel = document.getElementById("adminPanel");
+
+    if (user) {
+        // User sedang login
+        loginModal.classList.add("hidden");
+        userProfileSection.classList.remove("hidden");
+        userEmailDisplay.textContent = user.email;
+
+        // Cek apakah email yang login adalah Admin
+        if (user.email === ADMIN_EMAIL) {
+            if (adminBadge) adminBadge.classList.remove("hidden");
+            if (adminPanel) adminPanel.classList.remove("hidden");
+            console.log("Mode Admin Aktif!");
+        } else {
+            // Pastikan elemen admin tetap tersembunyi untuk pengunjung biasa
+            if (adminBadge) adminBadge.classList.add("hidden");
+            if (adminPanel) adminPanel.classList.add("hidden");
+        }
+    } else {
+        // User belum login / sudah logout
+        loginModal.classList.remove("hidden");
+        userProfileSection.classList.add("hidden");
+    }
+});
+// Pastikan fungsi ini di-import dari modul firebase/auth di bagian atas script.js kamu
+// import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+// Fungsi untuk menampilkan menu Lupa Password dan menyembunyikan form login biasa
+window.showForgotPassword = function() {
+    // Sembunyikan elemen input login biasa jika perlu, atau buat container khusus form login
+    document.getElementById("forgotPasswordContainer").classList.remove("hidden");
+    // Sembunyikan tombol login utama kalau mau lebih rapi
+}
+
+window.backToLogin = function() {
+    document.getElementById("forgotPasswordContainer").classList.add("hidden");
+}
+
+// Fungsi eksekusi kirim email reset password via Firebase
+window.handleResetPassword = function() {
+    const email = document.getElementById("resetEmail").value.trim();
+    
+    if (!email) {
+        alert("Mohon masukkan alamat email kamu terlebih dahulu!");
+        return;
+    }
+
+    sendPasswordResetEmail(window.auth, email)
+        .then(() => {
+            alert("Link reset password berhasil dikirim! Silakan cek kotak masuk (inbox/spam) Gmail kamu.");
+            document.getElementById("forgotPasswordContainer").classList.add("hidden");
+            document.getElementById("resetEmail").value = "";
+        })
+        .catch((error) => {
+            console.error("Error reset password:", error.code);
+            if (error.code === 'auth/user-not-found') {
+                alert("Email tidak terdaftar di sistem.");
+            } else {
+                alert("Gagal mengirim email reset: " + error.message);
+            }
+        });
+}
+// --- FUNGSI AUTH & RESET PASSWORD ZIZII HOME ---
+
+window.handleLogin = function() {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    
+    signInWithEmailAndPassword(window.auth, email, password)
+        .then((userCredential) => {
+            document.getElementById("loginModal").classList.add("hidden");
+        })
+        .catch((error) => {
+    // Ubah teksnya jadi lebih ramah dan hilangkan error teknis Firebase
+    document.getElementById("errorMessage").textContent = "Email atau password yang kamu masukkan salah. Coba cek lagi ya!";
+    document.getElementById("errorModal").classList.remove("hidden");
+});
+};
+
+// Fungsi untuk menutup popup saat tombol Close diklik
+window.closeErrorModal = function() {
+    document.getElementById("errorModal").classList.add("hidden");
+};
+
+window.showForgotPassword = function() {
+    document.getElementById("loginFormContainer").classList.add("hidden");
+    document.getElementById("forgotPasswordContainer").classList.remove("hidden");
+};
+
+window.backToLogin = function() {
+    document.getElementById("forgotPasswordContainer").classList.add("hidden");
+    document.getElementById("loginFormContainer").classList.remove("hidden");
+};
+
+window.handleResetPassword = function() {
+    const email = document.getElementById("resetEmail").value.trim();
+    if (!email) {
+        alert("Masukkan email terlebih dahulu!");
+        return;
+    }
+    sendPasswordResetEmail(window.auth, email)
+        .then(() => {
+            alert("Link reset password telah dikirim ke email kamu!");
+            backToLogin();
+        })
+        .catch((error) => {
+            alert("Gagal mengirim reset password: " + error.message);
+        });
+};
+window.handleLogout = async function() {
+    try {
+        await signOut(window.auth);
+        alert("Berhasil keluar akun!");
+    } catch (error) {
+        alert("Gagal logout: " + error.message);
+    }
+};
