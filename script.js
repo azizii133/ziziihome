@@ -521,3 +521,48 @@ window.handleLogout = async function() {
         alert("Gagal logout: " + error.message);
     }
 };
+import { getAuth, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+// Inisialisasi Auth (pastikan variabel auth sudah sesuai dengan punyamu)
+const auth = getAuth();
+
+// 1. Cek parameter URL saat halaman pertama kali dibuka
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const actionCode = urlParams.get('oobCode');
+
+    // Jika mode di URL adalah reset password, tampilkan modal/form ganti password
+    if (mode === 'resetPassword' && actionCode) {
+        const resetModal = document.getElementById('reset-password-modal'); // Sesuaikan dengan ID modal di HTML-mu
+        if (resetModal) {
+            resetModal.classList.remove('hidden'); // Memunculkan modal
+        }
+
+        // Simpan actionCode agar bisa dipakai saat tombol submit password baru diklik
+        window.currentActionCode = actionCode;
+    }
+});
+
+// 2. Fungsi yang dipanggil saat pengguna menekan tombol "Simpan Password Baru"
+window.submitNewPassword = function() {
+    const newPasswordInput = document.getElementById('new-password-input'); // Sesuaikan ID input password baru
+    const newPassword = newPasswordInput.value;
+    const actionCode = window.currentActionCode;
+
+    if (!newPassword || newPassword.length < 6) {
+        alert("Password minimal harus 6 karakter!");
+        return;
+    }
+
+    // Proses kirim password baru ke Firebase menggunakan token dari URL
+    confirmPasswordReset(auth, actionCode, newPassword)
+        .then(() => {
+            alert("Password berhasil diubah! Silakan login dengan password baru.");
+            window.location.href = "/"; // Redirect kembali ke halaman utama
+        })
+        .catch((error) => {
+            console.error("Gagal mereset password:", error.message);
+            alert("Terjadi kesalahan: " + error.message);
+        });
+};
