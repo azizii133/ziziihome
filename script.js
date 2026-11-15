@@ -206,7 +206,7 @@ const modsData = [
     renderMods(modsData);
 
     // Fungsi Play / Pause Manual & Auto-start
-    function toggleMusic() {
+    window.toggleMusic = function() {
         const music = document.getElementById('bgMusic');
         const btnText = document.getElementById('musicBtnText');
         
